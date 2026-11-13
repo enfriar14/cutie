@@ -1,6 +1,6 @@
-<title>:)</title>
+<title>Pink Birthday Cake</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700&family=Pacifico&display=swap">
 <link rel="icon" type="image/png" href="/k.png">
 <style>
 /* Layout: one centered column. A softly lit cake (rounded 3D tiers, piped cream, berries, satin bow) sits on a blush halo, status + meter + controls stacked below. */
@@ -35,12 +35,12 @@
   --candle-b: #f7bacb;
   --wick: #7a3a50;
   --smoke: #c4aab6;
-  --sparkle: #eea3ba;
+  --sparkle: #f08aaa;
   --lilac: #a67fdc;
   --gold: #d99a2b;
 
-  --font-display: 'Dancing Script', 'Segoe Script', 'Brush Script MT', cursive;
-  --font-body: 'Quicksand', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Pacifico', 'Brush Script MT', cursive;
+  --font-body: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -84,7 +84,10 @@
 }
 
 * { box-sizing: border-box; }
+html { height: 100%; }
 body {
+  display: flex;
+  min-height: 100%;
   background-color: var(--bg);
   background-image: radial-gradient(70% 45% at 50% 36%, var(--halo), transparent 72%);
   background-repeat: no-repeat;
@@ -98,8 +101,9 @@ body {
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 .page {
+  width: 100%;
   max-width: 480px;
-  margin: 0 auto;
+  margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -107,7 +111,7 @@ body {
 }
 h1 {
   margin: 0;
-  font: 700 clamp(2rem, 9vw, 2.8rem) / 1.15 var(--font-display);
+  font: 400 clamp(1.8rem, 8vw, 2.5rem) / 1.2 var(--font-display);
   color: var(--accent);
   text-align: center;
   text-wrap: balance;
@@ -127,16 +131,18 @@ h1 {
 .band { fill: url(#ribbonGrad); }
 .ribbon { fill: var(--ribbon); }
 .ribbon-deep { fill: var(--ribbon-deep); }
-.cake-text { font-family: var(--font-display); font-weight: 700; fill: var(--cake-text); text-anchor: middle; }
+.cake-text { font-family: var(--font-display); font-weight: 400; fill: var(--cake-text); text-anchor: middle; }
 .cake-heart { fill: var(--heart); opacity: .75; }
 .leaf { fill: var(--leaf); }
 .sparkle { fill: var(--sparkle); }
 .twinkle {
   transform-box: fill-box;
   transform-origin: 50% 50%;
-  animation: twinkle 2.8s ease-in-out infinite;
+  animation: twinkle var(--t, 2s) ease-in-out infinite;
   animation-delay: var(--d, 0s);
+  filter: drop-shadow(0 0 3px var(--sparkle));
 }
+.twinkle.gold { fill: var(--gold); filter: drop-shadow(0 0 3px var(--gold)); }
 
 /* candles */
 .candle-a { fill: var(--candle-a); }
@@ -168,8 +174,10 @@ h1 {
 }
 @keyframes glowpulse { from { opacity: .65; } to { opacity: 1; } }
 @keyframes twinkle {
-  0%, 100% { opacity: .25; transform: scale(.7); }
-  50% { opacity: .95; transform: scale(1.1); }
+  0%, 100% { opacity: .15; transform: scale(.3) rotate(0deg); }
+  40% { opacity: 1; transform: scale(1.2) rotate(45deg); }
+  55% { opacity: .9; transform: scale(.9) rotate(60deg); }
+  70% { opacity: .5; transform: scale(.6) rotate(80deg); }
 }
 @keyframes rise {
   0% { opacity: .5; transform: translateY(0) scale(.6); }
@@ -328,14 +336,7 @@ h1 {
       </defs>
 
       <!-- sparkles -->
-      <g class="sparkle">
-        <g transform="translate(46 150)"><use href="#sparkleShape" class="twinkle" style="--d:0s"/></g>
-        <g transform="translate(356 118) scale(.8)"><use href="#sparkleShape" class="twinkle" style="--d:.9s"/></g>
-        <g transform="translate(346 214) scale(.6)"><use href="#sparkleShape" class="twinkle" style="--d:1.6s"/></g>
-        <g transform="translate(62 232) scale(.7)"><use href="#sparkleShape" class="twinkle" style="--d:2.1s"/></g>
-        <g transform="translate(120 80) scale(.6)"><use href="#sparkleShape" class="twinkle" style="--d:.5s"/></g>
-        <g transform="translate(290 70) scale(.9)"><use href="#sparkleShape" class="twinkle" style="--d:1.3s"/></g>
-      </g>
+      <g id="sparkles" class="sparkle"></g>
 
       <!-- plate and soft shadow -->
       <ellipse class="shadow" cx="200" cy="372" rx="170" ry="11" filter="url(#blur6)"/>
@@ -358,7 +359,7 @@ h1 {
       <ellipse class="top-surface" cx="200" cy="176" rx="92" ry="9"/>
 
       <!-- cake message -->
-      <text id="t1" class="cake-text" x="200" y="308" font-size="28">Happy Birthday!</text>
+      <text id="t1" class="cake-text" x="200" y="296" font-size="28">Happy Birthday!</text>
       <g class="cake-heart">
         <use href="#heartShape" transform="translate(90 300) scale(1.1)"/>
         <use href="#heartShape" transform="translate(310 300) scale(1.1)"/>
@@ -425,6 +426,23 @@ h1 {
   }
   document.getElementById('pearls').innerHTML = pearls;
 
+  /* sparkles: x, y, size. Each one gets its own speed and delay so they never blink together. */
+  var spots = [
+    [46, 150, 1.5], [356, 118, 1.2], [346, 214, .9], [62, 232, 1.0],
+    [120, 80, .9], [290, 70, 1.3], [30, 60, .8], [372, 176, 1.0],
+    [88, 120, .7], [316, 150, .7], [200, 40, 1.1], [160, 52, .6],
+    [245, 36, .7], [28, 300, .9], [374, 290, 1.1], [104, 188, .5]
+  ];
+  var sparkleHtml = '';
+  spots.forEach(function (s, i) {
+    var dur = (1.3 + (i * 0.37) % 1.4).toFixed(2);
+    var delay = ((i * 0.43) % 2).toFixed(2);
+    sparkleHtml += '<g transform="translate(' + s[0] + ' ' + s[1] + ') scale(' + s[2] + ')">' +
+      '<use href="#sparkleShape" class="twinkle' + (i % 3 === 0 ? ' gold' : '') +
+      '" style="--d:' + delay + 's;--t:' + dur + 's"/></g>';
+  });
+  document.getElementById('sparkles').innerHTML = sparkleHtml;
+
   var flameOuter = 'M0 -24 C3 -16 7 -11 6.5 -5 C6 -1 3.5 1.5 0 1.5 C-3.5 1.5 -6 -1 -6.5 -5 C-7 -11 -3 -16 0 -24Z';
   var flameInner = 'M0 -13 C2 -8.5 4 -6 3.6 -2.6 C3.2 -.2 1.8 .8 0 .8 C-1.8 .8 -3.2 -.2 -3.6 -2.6 C-4 -6 -2 -8.5 0 -13Z';
   var candleHtml = '';
@@ -458,6 +476,8 @@ h1 {
   var smoothI = 0;
   var micOn = false;
   var analyser = null, buf = null, audioCtx = null;
+  var micAsking = false;
+  var floor = 0.01; /* running estimate of the room's background noise */
   var order = [];
   var MIC_MSG = 'Blow toward your device to put out the candles.';
 
@@ -480,7 +500,7 @@ h1 {
   }
 
   function celebrate() {
-    say('HAPPIEST BIRTHDAY GANDAAAA!');
+    say('All five candles are out. Your wish is on its way! The candles will light again in a moment.');
     var html = '';
     for (var i = 0; i < 16; i++) {
       var x = 10 + Math.random() * 78;
@@ -510,15 +530,18 @@ h1 {
     var sum = 0;
     for (var i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
     var rms = Math.sqrt(sum / buf.length);
-    return Math.max(0, Math.min(1, (rms - 0.05) / 0.09));
+    floor += (rms - floor) * (rms < floor ? 0.2 : 0.003);
+    return Math.max(0, Math.min(1, (rms - floor - 0.04) / 0.09));
   }
 
   function enableMic() {
+    if (micOn || micAsking) return;
     var md = navigator.mediaDevices;
     if (!md || !md.getUserMedia) {
-      say('This view cannot use a microphone. Open the page in Chrome or Edge to blow out the candles.');
+      say('This view cannot use a microphone. Open the page from a secure (https) link in Chrome or Safari to blow out the candles.');
       return;
     }
+    micAsking = true;
     md.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } })
       .then(function (stream) {
         var Ctx = window.AudioContext || window.webkitAudioContext;
@@ -531,15 +554,23 @@ h1 {
         src.connect(analyser);
         audioCtx = ctx;
         micOn = true;
+        micAsking = false;
         say(MIC_MSG);
+        try {
+          if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(function () {});
+        } catch (e) {}
       })
       .catch(function () {
         micOn = false;
-        say('Microphone access is blocked. Open the page in Chrome or Edge and allow the microphone to blow out the candles.');
+        micAsking = false;
+        say('The microphone is not available yet. Tap the screen to try again, and allow it when your browser asks.');
       });
   }
   /* some browsers keep the audio paused until the first tap or key press */
-  function wake() { if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
+  function wake() {
+    if (!micOn) { enableMic(); return; }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  }
   ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) {
     document.addEventListener(ev, wake, { passive: true });
   });
