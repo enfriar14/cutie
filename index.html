@@ -1,0 +1,570 @@
+<title>:)</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;700&display=swap">
+<link rel="icon" type="image/png" href="/k.png">
+<style>
+/* Layout: one centered column. A softly lit cake (rounded 3D tiers, piped cream, berries, satin bow) sits on a blush halo, status + meter + controls stacked below. */
+:root {
+  --bg: #fdf0f2;
+  --halo: #ffe0e8;
+  --surface: #fbdde5;
+  --fg: #4a1f31;
+  --muted: #8c566a;
+  --accent: #c2547a;
+  --accent-fg: #ffffff;
+  --line: rgba(194, 84, 122, .28);
+  --shadow: rgba(150, 60, 95, .28);
+
+  --cake-1: #f2a5ba;
+  --cake-2: #f9c4d1;
+  --cake-3: #fcd6df;
+  --cake-4: #f6b5c6;
+  --cake-5: #ea96ae;
+  --cream-1: #fffdfb;
+  --cream-2: #ffe6ed;
+  --plate-1: #ffffff;
+  --plate-2: #f6d3de;
+  --plate-edge: #ecb7c8;
+  --ribbon: #ea8dae;
+  --ribbon-deep: #cf6a8f;
+  --cake-text: #8f2c4f;
+  --heart: #e98aab;
+  --leaf: #86b583;
+
+  --candle-a: #fff8fa;
+  --candle-b: #f7bacb;
+  --wick: #7a3a50;
+  --smoke: #c4aab6;
+  --sparkle: #eea3ba;
+  --lilac: #a67fdc;
+  --gold: #d99a2b;
+
+  --font-display: 'Dancing Script', 'Segoe Script', 'Brush Script MT', cursive;
+  --font-body: 'Quicksand', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #21111a;
+    --halo: #3a1828;
+    --surface: #371f2c;
+    --fg: #ffe9f0;
+    --muted: #deaabd;
+    --accent: #f08aab;
+    --accent-fg: #3b0f22;
+    --line: rgba(255, 190, 215, .22);
+    --shadow: rgba(0, 0, 0, .5);
+    --plate-1: #7a4a60;
+    --plate-2: #5c3247;
+    --plate-edge: #4a2638;
+    --smoke: #dcc6d2;
+    --sparkle: #ffd6e4;
+    --lilac: #c3a4f2;
+    --gold: #ffc95a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #21111a;
+  --halo: #3a1828;
+  --surface: #371f2c;
+  --fg: #ffe9f0;
+  --muted: #deaabd;
+  --accent: #f08aab;
+  --accent-fg: #3b0f22;
+  --line: rgba(255, 190, 215, .22);
+  --shadow: rgba(0, 0, 0, .5);
+  --plate-1: #7a4a60;
+  --plate-2: #5c3247;
+  --plate-edge: #4a2638;
+  --smoke: #dcc6d2;
+  --sparkle: #ffd6e4;
+  --lilac: #c3a4f2;
+  --gold: #ffc95a;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background-color: var(--bg);
+  background-image: radial-gradient(70% 45% at 50% 36%, var(--halo), transparent 72%);
+  background-repeat: no-repeat;
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  padding-block: 20px 32px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+h1 {
+  margin: 0;
+  font: 700 clamp(2rem, 9vw, 2.8rem) / 1.15 var(--font-display);
+  color: var(--accent);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.stage { position: relative; width: 100%; }
+.stage svg { display: block; width: 100%; max-width: 100%; height: auto; overflow: visible; }
+
+/* cake parts */
+.shadow { fill: var(--shadow); }
+.plate-edge { fill: var(--plate-edge); }
+.plate-top { fill: url(#plateGrad); }
+.tier { fill: url(#tierGrad); }
+.top-surface { fill: url(#cream); stroke: var(--line); stroke-width: .8; }
+.shell { fill: url(#shell); stroke: var(--line); stroke-width: .7; }
+.pearl { fill: url(#pearl); }
+.band { fill: url(#ribbonGrad); }
+.ribbon { fill: var(--ribbon); }
+.ribbon-deep { fill: var(--ribbon-deep); }
+.cake-text { font-family: var(--font-display); font-weight: 700; fill: var(--cake-text); text-anchor: middle; }
+.cake-heart { fill: var(--heart); opacity: .75; }
+.leaf { fill: var(--leaf); }
+.sparkle { fill: var(--sparkle); }
+.twinkle {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: twinkle 2.8s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+/* candles */
+.candle-a { fill: var(--candle-a); }
+.candle-b { fill: var(--candle-b); }
+.wick { stroke: var(--wick); }
+.glow { opacity: 1; transition: opacity .3s; animation: glowpulse 1.6s ease-in-out infinite alternate; }
+.lean {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transform: skewX(calc(var(--lean, 0) * 1deg)) scaleY(var(--squash, 1));
+}
+.flick {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flick 1.1s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+.smoke circle { fill: var(--smoke); opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; }
+.candle.out .lean { transform: scale(0); transition: transform .3s ease-in; }
+.candle.out .glow { animation: none; opacity: 0; }
+.candle.out .smoke circle { animation: rise 2s ease-out forwards; }
+.candle.out .smoke circle:nth-child(2) { animation-delay: .15s; }
+.candle.out .smoke circle:nth-child(3) { animation-delay: .3s; }
+
+@keyframes flick {
+  0%, 100% { transform: scale(1, 1) rotate(-1.2deg); }
+  30% { transform: scale(.95, 1.06) rotate(1.2deg); }
+  60% { transform: scale(1.04, .96) rotate(-.8deg); }
+}
+@keyframes glowpulse { from { opacity: .65; } to { opacity: 1; } }
+@keyframes twinkle {
+  0%, 100% { opacity: .25; transform: scale(.7); }
+  50% { opacity: .95; transform: scale(1.1); }
+}
+@keyframes rise {
+  0% { opacity: .5; transform: translateY(0) scale(.6); }
+  100% { opacity: 0; transform: translateY(-52px) scale(2.6); }
+}
+
+/* hearts */
+.hearts { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.heart {
+  position: absolute;
+  bottom: 40%;
+  left: var(--x);
+  font-size: var(--s);
+  line-height: 1;
+  opacity: 0;
+  font-variant-emoji: text;
+  animation: floatup 2.6s ease-out forwards;
+  animation-delay: var(--delay);
+}
+.heart.c0 { color: var(--accent); }
+.heart.c1 { color: var(--lilac); }
+.heart.c2 { color: var(--gold); }
+@keyframes floatup {
+  0% { opacity: 0; transform: translate(0, 0) scale(.6); }
+  15% { opacity: .95; }
+  100% { opacity: 0; transform: translate(var(--dx), -230px) scale(1.1); }
+}
+
+/* controls */
+.status {
+  margin: 0;
+  min-height: 3em;
+  text-align: center;
+  color: var(--muted);
+  text-wrap: balance;
+}
+.meter-wrap { width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 6px; }
+.meter-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.meter { height: 8px; border-radius: 999px; background: var(--surface); overflow: hidden; }
+.meter-fill { height: 100%; width: 0%; border-radius: 999px; background: var(--accent); }
+.controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; }
+.btn {
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font: 700 15px var(--font-body);
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--fg);
+}
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.btn-hold {
+  min-width: 200px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.btn:active, .btn.held { transform: scale(.97); }
+.btn:disabled { opacity: .65; cursor: default; }
+.btn:focus-visible, .field input:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.field { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 300px; }
+.field label { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.field input {
+  min-height: 46px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--fg);
+  font: 500 16px var(--font-body);
+}
+.field input::placeholder { color: var(--muted); opacity: .8; }
+
+@media (prefers-reduced-motion: reduce) {
+  .flick, .glow, .twinkle { animation: none; }
+  .hearts { display: none; }
+  .candle.out .smoke circle { animation-duration: .01s; }
+}
+</style>
+
+<main class="page">
+  <h1>Make a wish, then blow</h1>
+
+  <div class="stage">
+    <svg id="cake" viewBox="0 0 400 392" role="img" aria-label="A blush pink two-tier birthday cake with piped cream, satin ribbon bows and five lit candles">
+      <defs>
+        <filter id="blur6" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+        <filter id="blur3" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+
+        <linearGradient id="tierGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" style="stop-color:var(--cake-5)"/>
+          <stop offset=".18" style="stop-color:var(--cake-1)"/>
+          <stop offset=".38" style="stop-color:var(--cake-3)"/>
+          <stop offset=".6" style="stop-color:var(--cake-2)"/>
+          <stop offset=".85" style="stop-color:var(--cake-4)"/>
+          <stop offset="1" style="stop-color:var(--cake-5)"/>
+        </linearGradient>
+        <radialGradient id="cream" cx=".5" cy=".4" r=".7">
+          <stop offset="0" style="stop-color:var(--cream-1)"/>
+          <stop offset="1" style="stop-color:var(--cream-2)"/>
+        </radialGradient>
+        <radialGradient id="shell" cx=".38" cy=".32" r=".8">
+          <stop offset="0" stop-color="#ffffff"/>
+          <stop offset=".55" style="stop-color:var(--cream-2)"/>
+          <stop offset="1" style="stop-color:var(--cake-2)"/>
+        </radialGradient>
+        <radialGradient id="pearl" cx=".35" cy=".3" r=".8">
+          <stop offset="0" stop-color="#ffffff"/>
+          <stop offset="1" style="stop-color:var(--cake-2)"/>
+        </radialGradient>
+        <linearGradient id="plateGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" style="stop-color:var(--plate-1)"/>
+          <stop offset="1" style="stop-color:var(--plate-2)"/>
+        </linearGradient>
+        <linearGradient id="ribbonGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" style="stop-color:var(--ribbon)"/>
+          <stop offset="1" style="stop-color:var(--ribbon-deep)"/>
+        </linearGradient>
+        <radialGradient id="glow">
+          <stop offset="0" stop-color="#ffd98a" stop-opacity=".8"/>
+          <stop offset="1" stop-color="#ffd98a" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="flameOuter" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffab5e"/>
+          <stop offset="1" stop-color="#ffd98a"/>
+        </linearGradient>
+        <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#ffffff" stop-opacity=".6"/>
+          <stop offset=".4" stop-color="#ffffff" stop-opacity="0"/>
+          <stop offset="1" stop-color="#7a3a50" stop-opacity=".18"/>
+        </linearGradient>
+        <pattern id="stripe" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(40)">
+          <rect width="8" height="8" class="candle-a"/>
+          <rect width="4" height="8" class="candle-b"/>
+        </pattern>
+
+        <g id="miniBow">
+          <path class="ribbon" d="M0 0 C-10 -11 -23 -9 -22 0 C-21 9 -9 9 0 0Z"/>
+          <path class="ribbon" d="M0 0 C10 -11 23 -9 22 0 C21 9 9 9 0 0Z"/>
+          <path class="ribbon-deep" d="M0 1 L-8 17 L-3 14 L-1 19Z"/>
+          <path class="ribbon-deep" d="M0 1 L8 17 L3 14 L1 19Z"/>
+          <ellipse class="ribbon-deep" cx="0" cy="0" rx="3.8" ry="4.2"/>
+          <path d="M-18 -3 C-14 -6 -9 -5 -6 -1" stroke="#ffffff" stroke-opacity=".4" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+          <path d="M18 -3 C14 -6 9 -5 6 -1" stroke="#ffffff" stroke-opacity=".4" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+        </g>
+        <path id="sparkleShape" d="M0 -7 Q0 0 7 0 Q0 0 0 7 Q0 0 -7 0 Q0 0 0 -7Z"/>
+        <path id="heartShape" d="M0 3.5 C-7 -2 -4.5 -8 0 -4.5 C4.5 -8 7 -2 0 3.5Z"/>
+      </defs>
+
+      <!-- sparkles -->
+      <g class="sparkle">
+        <g transform="translate(46 150)"><use href="#sparkleShape" class="twinkle" style="--d:0s"/></g>
+        <g transform="translate(356 118) scale(.8)"><use href="#sparkleShape" class="twinkle" style="--d:.9s"/></g>
+        <g transform="translate(346 214) scale(.6)"><use href="#sparkleShape" class="twinkle" style="--d:1.6s"/></g>
+        <g transform="translate(62 232) scale(.7)"><use href="#sparkleShape" class="twinkle" style="--d:2.1s"/></g>
+        <g transform="translate(120 80) scale(.6)"><use href="#sparkleShape" class="twinkle" style="--d:.5s"/></g>
+        <g transform="translate(290 70) scale(.9)"><use href="#sparkleShape" class="twinkle" style="--d:1.3s"/></g>
+      </g>
+
+      <!-- plate and soft shadow -->
+      <ellipse class="shadow" cx="200" cy="372" rx="170" ry="11" filter="url(#blur6)"/>
+      <ellipse class="plate-edge" cx="200" cy="347" rx="174" ry="21"/>
+      <ellipse class="plate-top" cx="200" cy="340" rx="174" ry="21"/>
+
+      <!-- bottom tier -->
+      <path class="tier" d="M52 252 V338 A148 14 0 0 0 348 338 V252 Z"/>
+      <path class="band" d="M52 318 A148 14 0 0 0 348 318 V328 A148 14 0 0 1 52 328 Z"/>
+      <g id="pearls"></g>
+      <ellipse class="top-surface" cx="200" cy="252" rx="148" ry="14"/>
+      <ellipse class="shadow" cx="200" cy="250" rx="98" ry="10" opacity=".35" filter="url(#blur3)"/>
+
+      <!-- ribbon bows on the lower tier -->
+      <use href="#miniBow" transform="translate(80 247) rotate(-10)"/>
+      <use href="#miniBow" transform="translate(320 247) rotate(10)"/>
+
+      <!-- top tier -->
+      <path class="tier" d="M108 176 V243 A92 9 0 0 0 292 243 V176 Z"/>
+      <ellipse class="top-surface" cx="200" cy="176" rx="92" ry="9"/>
+
+      <!-- cake message -->
+      <text id="t1" class="cake-text" x="200" y="308" font-size="28">Happy Birthday!</text>
+      <g class="cake-heart">
+        <use href="#heartShape" transform="translate(90 300) scale(1.1)"/>
+        <use href="#heartShape" transform="translate(310 300) scale(1.1)"/>
+        <use href="#heartShape" transform="translate(134 214) scale(.9)"/>
+        <use href="#heartShape" transform="translate(266 214) scale(.9)"/>
+      </g>
+
+      <!-- bow -->
+      <g>
+        <path class="ribbon" d="M200 335 C186 321 167 323 169 335 C171 347 188 347 200 335Z"/>
+        <path class="ribbon" d="M200 335 C214 321 233 323 231 335 C229 347 212 347 200 335Z"/>
+        <path class="ribbon-deep" d="M200 336 L188 359 L196 355 L199 362 Z"/>
+        <path class="ribbon-deep" d="M200 336 L212 359 L204 355 L201 362 Z"/>
+        <ellipse class="ribbon-deep" cx="200" cy="335" rx="5.5" ry="6"/>
+        <path d="M176 331 C181 327 188 328 193 333" stroke="#ffffff" stroke-opacity=".4" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+        <path d="M224 331 C219 327 212 328 207 333" stroke="#ffffff" stroke-opacity=".4" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+      </g>
+
+      <g id="shells-bottom"></g>
+      <g id="candles"></g>
+      <g id="shells-top"></g>
+    </svg>
+    <div class="hearts" id="hearts" aria-hidden="true"></div>
+  </div>
+
+  <p class="status" id="status" aria-live="polite">Allow microphone access, then blow toward your device to put out the candles.</p>
+
+  <div class="meter-wrap" aria-hidden="true">
+    <span class="meter-label">Blow strength</span>
+    <div class="meter"><div class="meter-fill" id="meterFill"></div></div>
+  </div>
+
+</main>
+
+<script>
+(function () {
+  var N = 5;
+  var xs = [152, 176, 200, 224, 248];
+
+  var svg = document.getElementById('cake');
+  var statusEl = document.getElementById('status');
+  var meterFill = document.getElementById('meterFill');
+  var heartsEl = document.getElementById('hearts');
+
+  /* ---------- build the cake ---------- */
+  function shells(targetId, cx, cy, rx, ry, n, r) {
+    var html = '';
+    for (var i = 0; i <= n; i++) {
+      var a = Math.PI * i / n;
+      var x = cx + rx * Math.cos(a), y = cy + ry * Math.sin(a);
+      html += '<ellipse class="shell" cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) +
+              '" rx="' + r + '" ry="' + (r * 0.85).toFixed(1) + '"/>';
+    }
+    document.getElementById(targetId).innerHTML = html;
+  }
+  shells('shells-bottom', 200, 252, 148, 14, 30, 9.5);
+  shells('shells-top', 200, 176, 92, 9, 20, 7);
+
+  var pearls = '';
+  for (var p = 0; p < 24; p++) {
+    var a = Math.PI * (0.07 + 0.86 * p / 23);
+    pearls += '<circle class="pearl" cx="' + (200 + 148 * Math.cos(a)).toFixed(1) +
+              '" cy="' + (338 + 14 * Math.sin(a) - 4).toFixed(1) + '" r="3.2"/>';
+  }
+  document.getElementById('pearls').innerHTML = pearls;
+
+  var flameOuter = 'M0 -24 C3 -16 7 -11 6.5 -5 C6 -1 3.5 1.5 0 1.5 C-3.5 1.5 -6 -1 -6.5 -5 C-7 -11 -3 -16 0 -24Z';
+  var flameInner = 'M0 -13 C2 -8.5 4 -6 3.6 -2.6 C3.2 -.2 1.8 .8 0 .8 C-1.8 .8 -3.2 -.2 -3.6 -2.6 C-4 -6 -2 -8.5 0 -13Z';
+  var candleHtml = '';
+  xs.forEach(function (x, i) {
+    candleHtml +=
+      '<g class="candle">' +
+        '<rect x="' + (x - 3.5) + '" y="128" width="7" height="50" rx="3.2" fill="url(#stripe)"/>' +
+        '<rect x="' + (x - 3.5) + '" y="128" width="7" height="50" rx="3.2" fill="url(#sheen)"/>' +
+        '<ellipse class="candle-a" cx="' + x + '" cy="128.4" rx="3.4" ry="1.3"/>' +
+        '<path class="wick" d="M' + x + ' 128 v-5" stroke-width="1.3" stroke-linecap="round" fill="none"/>' +
+        '<circle class="glow" cx="' + x + '" cy="112" r="22" fill="url(#glow)" style="animation-delay:' + (i * 0.25) + 's"/>' +
+        '<g transform="translate(' + x + ' 123)">' +
+          '<g class="lean" style="--d:' + (i * 0.19) + 's">' +
+            '<g class="flick">' +
+              '<path d="' + flameOuter + '" fill="url(#flameOuter)"/>' +
+              '<path d="' + flameInner + '" fill="#fffbe8"/>' +
+            '</g>' +
+          '</g>' +
+        '</g>' +
+        '<g class="smoke" transform="translate(' + x + ' 116)">' +
+          '<circle r="3"/><circle r="3" cx="3"/><circle r="2.5" cx="-3"/>' +
+        '</g>' +
+      '</g>';
+  });
+  document.getElementById('candles').innerHTML = candleHtml;
+  var candles = Array.prototype.slice.call(document.querySelectorAll('.candle'));
+
+  /* ---------- state ---------- */
+  var outCount = 0;
+  var blowT = 0;
+  var smoothI = 0;
+  var micOn = false;
+  var analyser = null, buf = null, audioCtx = null;
+  var order = [];
+  var MIC_MSG = 'Blow toward your device to put out the candles.';
+
+  function shuffle() {
+    order = candles.map(function (_, i) { return i; });
+    for (var i = order.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = order[i]; order[i] = order[j]; order[j] = tmp;
+    }
+  }
+  shuffle();
+
+  function say(msg) { statusEl.textContent = msg; }
+
+  function snuff() {
+    if (outCount >= N) return;
+    candles[order[outCount]].classList.add('out');
+    outCount++;
+    if (outCount === N) celebrate();
+  }
+
+  function celebrate() {
+    say('HAPPIEST BIRTHDAY GANDAAAA!');
+    var html = '';
+    for (var i = 0; i < 16; i++) {
+      var x = 10 + Math.random() * 78;
+      var dx = (Math.random() * 80 - 40) + 'px';
+      var size = 14 + Math.random() * 16;
+      html += '<span class="heart c' + (i % 3) + '" style="--x:' + x.toFixed(1) + '%;--dx:' + dx +
+              ';--s:' + size.toFixed(0) + 'px;--delay:' + (Math.random() * 0.6).toFixed(2) + 's">&#9829;</span>';
+    }
+    heartsEl.innerHTML = html;
+    setTimeout(function () { heartsEl.innerHTML = ''; }, 3600);
+    setTimeout(relight, 8000);
+  }
+
+  function relight() {
+    candles.forEach(function (c) { c.classList.remove('out'); });
+    outCount = 0;
+    blowT = 0;
+    heartsEl.innerHTML = '';
+    shuffle();
+    say(MIC_MSG);
+  }
+
+  /* ---------- microphone ---------- */
+  function micLevel() {
+    if (!analyser) return 0;
+    analyser.getFloatTimeDomainData(buf);
+    var sum = 0;
+    for (var i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+    var rms = Math.sqrt(sum / buf.length);
+    return Math.max(0, Math.min(1, (rms - 0.05) / 0.09));
+  }
+
+  function enableMic() {
+    var md = navigator.mediaDevices;
+    if (!md || !md.getUserMedia) {
+      say('This view cannot use a microphone. Open the page in Chrome or Edge to blow out the candles.');
+      return;
+    }
+    md.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } })
+      .then(function (stream) {
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        var ctx = new Ctx();
+        if (ctx.resume) ctx.resume();
+        var src = ctx.createMediaStreamSource(stream);
+        analyser = ctx.createAnalyser();
+        analyser.fftSize = 1024;
+        buf = new Float32Array(analyser.fftSize);
+        src.connect(analyser);
+        audioCtx = ctx;
+        micOn = true;
+        say(MIC_MSG);
+      })
+      .catch(function () {
+        micOn = false;
+        say('Microphone access is blocked. Open the page in Chrome or Edge and allow the microphone to blow out the candles.');
+      });
+  }
+  /* some browsers keep the audio paused until the first tap or key press */
+  function wake() { if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
+  ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) {
+    document.addEventListener(ev, wake, { passive: true });
+  });
+  document.addEventListener('visibilitychange', wake);
+  enableMic();
+
+  /* ---------- main loop ---------- */
+  var last = performance.now();
+  function loop(now) {
+    var dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+
+    var target = micOn ? micLevel() : 0;
+    smoothI += (target - smoothI) * Math.min(1, dt * 12);
+
+    svg.style.setProperty('--lean', (smoothI * 14).toFixed(2));
+    svg.style.setProperty('--squash', (1 - smoothI * 0.3).toFixed(3));
+    meterFill.style.width = Math.round(smoothI * 100) + '%';
+
+    if (outCount < N) {
+      if (target > 0.5) blowT += dt; else blowT = Math.max(0, blowT - dt * 1.5);
+      if (blowT >= 0.3 + outCount * 0.12) snuff();
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
